@@ -1,0 +1,931 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+// ----------------------------------declaration of all menus----------------------------------------
+
+void menu();
+void stackmenu();
+void Queuemenu();
+void stackwitharraymenu();
+void linkedliststackmenu();
+void queuewitharray();
+void linkedlistqueue();
+
+//------------------------------------node class-----------------------------------------------------
+
+
+class Node {
+	public:
+		int data;
+		Node* next;
+
+		Node(int value) : data(value), next(NULL) {}
+};
+
+
+//-----------------------------------linked queue class--------------------------------------------------
+
+class linkedqueue {
+	private:
+		Node* front;
+		Node* rear;
+		int currentsize;
+
+	public:
+		linkedqueue() {
+			front = NULL;
+			rear = NULL;
+			currentsize = 0;
+		}
+		~linkedqueue() {
+			while (front != NULL) {
+				Node* temp = front;
+				front = front->next;
+				delete temp;
+			}
+			rear = NULL; // Set rear to NULL
+			currentsize = 0;
+		}
+
+
+//enqueue funtion using singly linked list in queue
+
+		void enqueue(int value) {
+			Node* newNode = new Node(value);
+			if (front == NULL) {
+				front = rear = newNode;
+			} else {
+				rear->next = newNode;
+				rear = newNode;
+			}
+			currentsize++;
+
+			// Print debug messages
+			std::cout << "Enqueued value: " << value << std::endl;
+			std::cout << "Front: " << front->data << ", Rear: " << rear->data << std::endl;
+		}
+
+
+
+//dequeue funtion using singly linked list in queue
+
+		void dequeue() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t QUEUE IS EMPTY ... SOO CANNOT DEQUEUE"<<endl;
+				return;
+			}
+			Node* temp= front;
+			if(front == rear) {
+				front = rear = NULL;
+			} else {
+				front = front->next;
+			}
+			delete temp;
+			currentsize --;
+		}
+
+//getting front using singly linkedlist in queue
+
+		int getfront() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t QUEUE IS EMPTY..."<<endl;
+				return -1;
+			}
+			return front->data;
+		}
+
+//getting rear using singly linked list in queue
+
+		int getrear() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t QUEUE IS EMPTY"<<endl;
+				return -1;
+			}
+			return rear->data;
+		}
+
+//checking queue is full
+
+		bool isfull() {
+			return false;
+		}
+
+
+//checking queue is empty
+
+		bool isEmpty() {
+			return front == NULL;
+		}
+
+
+//checking size of queue
+
+		int size() {
+			return currentsize;
+		}
+
+// display of queue
+
+		void display() {
+			if (isEmpty()) {
+				cout << "\n\t\t\t\t QUEUE IS EMPTY" << endl;
+				return;
+			}
+
+			Node* temp = front;
+			cout << "\n\t\t\t\t  QUEUE IS :";
+			while (temp != NULL) {
+				cout << temp->data;
+				temp = temp->next;
+				if (temp != NULL) {
+					cout << "->";
+				} else {
+					cout << "->NULL";
+				}
+			}
+			cout << endl;
+		}
+
+
+
+};
+
+//-----------------------------------array queue class----------------------------------------------------
+
+class Myqueue {
+	private:
+		int *Arr;
+		int front,rear,capacity,currentsize;
+	public:
+		Myqueue(int size) {
+			capacity = size;
+			Arr = new int(capacity);
+			front = -1;
+			rear = -1;
+			currentsize = 0;
+		}
+		~Myqueue() {
+			delete[] Arr;
+		}
+
+		int getsize() {
+			return currentsize;
+		}
+
+//enqueue funtion using circular array
+
+		void enqueue(int value) {
+			if(isFull()) {
+				cout<<"\n\t\t\t\t Queue is full ....."<<endl;
+				return;
+			}
+			if(isEmpty()) {
+				front = 0;
+				rear = 0;
+			} else {
+				rear = (rear+1)%capacity;
+			}
+			Arr[rear] = value;
+			currentsize++;
+		}
+
+//dequeue funtion using circular array
+
+		void dequeue() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t Queue is empty ....."<<endl;
+				return;
+			}
+			if(front == rear) {
+				front = -1;
+				rear = -1;
+			} else {
+				front = (front+1) % capacity;
+			}
+			currentsize -- ;
+		}
+
+//get front funtion using circular array
+
+		void getFront() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t Queue is empty ...."<<endl;
+			}
+			cout<<"\n\t\t\t\t Front is :"<<Arr[front];
+		}
+
+//get rear funtion using circular array
+
+		void getRear() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t Queue is empty ...."<<endl;
+			}
+			cout<<"\n\t\t\t\t Rear is :"<<Arr[rear];
+		}
+
+//is full check in queue
+
+		bool isFull() {
+			return currentsize == capacity;
+		}
+
+//if empty check in queue
+
+		bool isEmpty() {
+			return currentsize == 0;
+		}
+
+//display funtion in queue
+
+		void display() {
+			if (isEmpty()) {
+				cout << "\n\t\t\t\t Queue is empty ..."<<endl;
+				return;
+			}
+
+			int i = front;
+			cout<<"\n\t\t\t\ queue = ";
+			do {
+				cout<<"|";
+				cout << Arr[i] << "|";
+				i = (i + 1) % capacity;
+			} while (i != (rear + 1) % capacity);
+		}
+};
+
+//------------------------------------stack class----------------------------------------------------
+
+class Mystack {
+	private:
+		int capacity;
+		int *A;
+		int top ;
+	public:
+		Mystack(int size) {
+			A = new int[size];
+			capacity = size;
+			top = -1;
+		}
+		~Mystack() {
+			delete[] A;
+		}
+
+//push function with array
+
+		void push(int value) {
+			if(top == capacity ) {
+				cout<<"\n\t\t\t\t\t         STACK OVERFLOW"<<endl;
+			} else {
+				top++;
+				A[top]=value;
+			}
+		}
+
+//pop function with array
+
+		int pop() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t\t         STACK UNDERFLOW"<<endl;
+				return -1;
+			}
+			int key = A[top];
+			top -- ;
+			return key;
+		}
+
+//isEmpty function with array
+
+		bool isEmpty() {
+			return (top == -1);
+		}
+
+//isFULL function with array
+
+		bool isFull() {
+			return (top==capacity);
+		}
+
+//peek funtion with array
+		int peek() {
+			if (isEmpty()) {
+				cout << "\n\t\t\t\t         STACK UNDERFLOW: the stack is empty" << endl;
+				return -1;
+			} else {
+				return A[top];
+			}
+		}
+
+
+//display function with array
+
+		void display() {
+			if (!isEmpty()) {
+
+				cout<<"\n\t\t\t\t            STACK =  |";
+				for (int i = top; i >= 0; i--) {
+					cout << A[i] << "|";
+				}
+				cout<<"\n";
+			} else {
+				cout << "\n\t\t\t\t              STACK IS EMPTY." << endl;
+			}
+		}
+
+};
+
+
+//-------------------------------------linkedlist class----------------------------------------------
+
+class linkedliststack {
+	private:
+		Node* top;
+
+	public:
+		linkedliststack() {
+			top=NULL;
+		}
+
+		~linkedliststack() {
+			while(!isEmpty()) {
+				pop();
+			}
+		}
+
+//push function with linkedlist
+
+		void push(int value) {
+			Node* newNode = new Node(value);
+			newNode->next = top;
+			top = newNode;
+
+			cout<<"\n\t\t\t\t                      pushed :"<<value;
+		}
+
+//pop function with linked list
+
+		int pop() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t                  stack underflow"<<endl;
+			}
+			Node* temp = top;
+			top = top->next;
+			int key;
+			key = temp->data;
+			return key;
+			delete temp;
+		}
+
+//peek funtion with linked list
+
+		int peek() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t                 stack is empty"<<endl;
+				return -1;
+			}
+			return top->data;
+		}
+
+//isEmpty funtion with linkedlist
+
+		bool isEmpty() {
+			return (top == NULL);
+		}
+
+//display funtion with linkedlist
+
+		void display() {
+			if(isEmpty()) {
+				cout<<"\n\t\t\t\t                        STACK IS EMPTY"<<endl;
+			}
+			Node* curr = top;
+			cout<<"\n\t\t\t  STACK :";
+			while(curr != NULL) {
+				cout<<curr->data<<"->";
+				curr = curr->next;
+			}
+			cout<<"NULL";
+		}
+
+
+};
+
+
+//------------------------------------------stack menu------------------------------------------------
+
+void stackmenu() {
+	system("cls");
+	int choice;
+	do {
+		cout<<"\n\t\t\t********************************STACK MENU******************************* "<<endl;
+		cout<<"\n\t\t\t--------------------------------------------------------------------------"<<endl;
+		cout<<"\n\t\t\t|                      1. STACK WITH CIRCULAR ARRAY                      |"<<endl;
+		cout<<"\n\t\t\t|                      2. STACK WITH SINGLY LINKEDLIST                   |"<<endl;
+		cout<<"\n\t\t\t|                      3. BACK                                           |"<<endl;
+		cout<<"\n\t\t\t--------------------------------------------------------------------------"<<endl;
+		cout<<"\n\t\t\t                   selected option :";
+		cin>>choice;
+		if(choice<=0 || choice>3) {
+			cout<<"\n\t\t\t\t  enter positive value or value from option           "<<endl;
+		}
+	} while(choice<=0 || choice>3);
+	switch(choice) {
+		case 1: {
+			stackwitharraymenu();
+			break;
+		}
+		case 2: {
+			linkedliststackmenu();
+			break;
+		}
+		case 3: {
+			system("cls");
+			menu();
+			break;
+		}
+	}
+}
+
+
+//--------------------------------------------main menu-----------------------------------------------
+
+void menu() {
+	int choice;
+	do {
+		cout<<"\n\t\t\t\t***********************MAIN MENU************************* "<<endl;
+		cout<<"\n\t\t\t\t ---------------------------------------------------------"<<endl;
+		cout<<"\n\t\t\t\t|                       1. STACK                         |"<<endl;
+		cout<<"\n\t\t\t\t|                       2. QUEUE                         |"<<endl;
+		cout<<"\n\t\t\t\t|                       3. EXIT                          |"<<endl;
+		cout<<"\n\t\t\t\t ---------------------------------------------------------"<<endl;
+		cout<<"\n\t\t\t\t                   selected option :";
+		cin>>choice;
+		if(choice<0 || choice >3) {
+			cout<<"\n\t\t\t\t  enter positive value or value from option           "<<endl;
+		}
+	} while(choice<=0 || choice >3);
+	switch(choice) {
+		case 1: {
+			stackmenu();
+			break;
+		}
+		case 2: {
+			Queuemenu();
+			break;
+		}
+		default: {
+			system("cls");
+			cout<<"\n\t\t\t\t\t               THANK YOU FOR COMING <3                 "<<endl;
+			break;
+		}
+	}
+
+}
+
+//-----------------------------------------Queue menu-------------------------------------------------
+
+void Queuemenu() {
+	system("cls");
+	int choice;
+	do {
+		cout<<"\n\t\t\t*********************************QUEUE MENU****************************** "<<endl;
+		cout<<"\n\t\t\t--------------------------------------------------------------------------"<<endl;
+		cout<<"\n\t\t\t|                      1. QUEUE WITH CIRCULAR ARRAY                      |"<<endl;
+		cout<<"\n\t\t\t|                      2. QUEUE WITH SINGLY LINKEDLIST                   |"<<endl;
+		cout<<"\n\t\t\t|                      3. BACK                                           |"<<endl;
+		cout<<"\n\t\t\t--------------------------------------------------------------------------"<<endl;
+		cout<<"\n\t\t\t                   selected option :";
+		cin>>choice;
+		if(choice<=0 || choice>3) {
+			cout<<"\n\t\t\t\t  enter positive value or value from option           "<<endl;
+		}
+	} while(choice<=0 || choice>3);
+	switch(choice) {
+		case 1: {
+			queuewitharray();
+			break;
+		}
+		case 2: {
+			linkedlistqueue();
+			break;
+		}
+		case 3: {
+			system("cls");
+			menu();
+			break;
+		}
+		default: {
+			system("cls");
+			cout<<"\n\t\t\t\t\t               THANK YOU FOR COMING <3                 "<<endl;
+			break;
+		}
+	}
+
+
+}
+
+
+
+
+//-------------------------------------stack with circular array--------------------------------------
+
+void stackwitharraymenu() {
+	system("cls");
+	int choice;
+	int a;
+	cout<<"\n\n\t\t\t\t       ENTER THE SIZE OF ARRAY ....";
+	cin>>a;
+	Mystack Swa(a);
+	do {
+		do {
+			cout<<"\n\t\t\t***********************STACK WITH CIRCULAR ARRAY************************** "<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t|                      1. PUSH()                                          |"<<endl;
+			cout<<"\n\t\t\t|                      2. POP()                                           |"<<endl;
+			cout<<"\n\t\t\t|                      3. PEEK()                                          |"<<endl;
+			cout<<"\n\t\t\t|                      4. ISEMPTY()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      5. ISFULL()                                        |"<<endl;
+			cout<<"\n\t\t\t|                      6. IS_BALANCE_PARATHESIS() (using stack)           |"<<endl;
+			cout<<"\n\t\t\t|                      7. INFIX_TO_POSTFIX() (using stack)                |"<<endl;
+			cout<<"\n\t\t\t|                      8. BACK                                            |"<<endl;
+			cout<<"\n\t\t\t|                      0. EXIT                                            |"<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t                   selected option :";
+			cin>>choice;
+			if(choice<0 || choice>8) {
+				cout<<"\n\t\t\t\t  enter positive value or value from option           "<<endl;
+			}
+		} while(choice<0 || choice>8);
+		switch(choice) {
+			case 1: {
+				system("cls");
+				cout<<"\n\t\t\t\t        PUSHING........VALUE ........"<<endl;
+				int val;
+				cout<<"\n\t\t\t\t        ENTER THE VALUE YOU WANT TO PUSH :";
+				cin>>val;
+				system("cls");
+				Swa.push(val);
+				cout<<"\n\t\t\t\t        AFTER PUSHING STACK IS...."<<endl;
+				Swa.display();
+				break;
+			}
+			case 2: {
+				system("cls");
+				cout<<"\n\t\t\t\t        POPPING..........."<<endl;
+				cout<<"\n\t\t\t\t        POPPED ELEMENT IS :"<<Swa.pop();
+				cout<<"\n\n\n\t\t\t\t        AFTER POPING VALUE STACK IS......"<<endl;
+				Swa.display();
+				break;
+			}
+			case 3: {
+				system("cls");
+				int i;
+				do {
+					cout<<"\n\t\t\t\t--------------------------------------------"<<endl;
+					cout<<"\n\t\t\t\t        TELLING PEEK.......                 "<<endl;
+					cout<<"\n\t\t\t\t        VALUE AT THE PEEK IS : "<<Swa.peek();
+					cout<<"\n\t\t\t\t        STACK IS.....                       "<<endl;
+					Swa.display();
+					cout<<"\n\t\t\t\t--------------------------------------------"<<endl;
+					cout<<"\n\t\t\t\t        press 1 to continuee .........";
+					cin>>i;
+				} while(i!=1);
+				break;
+			}
+			case 4: {
+				system("cls");
+				cout<<"\n\t\t\t\t        TELLING STACK IS EMPTY OR NOT........"<<endl;
+				if(!Swa.isEmpty()) {
+					cout<<"\n\t\t\t\t          STACK IS NOT EMPTY "<<endl;
+				} else {
+					cout<<"\n\t\t\t\t        STACK IS EMPTY"<<endl;
+				}
+				break;
+			}
+			case 5: {
+				system("cls");
+				cout<<"\n\t\t\t\t        TELLING STACK IS FULL OR NOT........"<<endl;
+				if(!Swa.isFull()) {
+					cout<<"\n\t\t\t\t          STACK IS NOT FULL "<<endl;
+				} else {
+					cout<<"\n\t\t\t\t        STACK IS FULL"<<endl;
+				}
+				break;
+			}
+			case 6: {
+
+				break;
+			}
+			case 7: {
+
+				break;
+			}
+			case 8: {
+				stackmenu();
+				break;
+			}
+		}
+	} while(choice!=0);
+}
+
+//-----------------------------------Stack with singly linkedlist-------------------------------------
+
+void linkedliststackmenu() {
+	system("cls");
+	int choice;
+	linkedliststack lls;
+	do {
+		do {
+			cout<<"\n\t\t\t*********************STACK WITH SINGLY LINKED LIST************************ "<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t|                      1. PUSH()                                          |"<<endl;
+			cout<<"\n\t\t\t|                      2. POP()                                           |"<<endl;
+			cout<<"\n\t\t\t|                      3. PEEK()                                          |"<<endl;
+			cout<<"\n\t\t\t|                      4. ISEMPTY()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      5. IS_BALANCE_PARATHESIS() (using stack)           |"<<endl;
+			cout<<"\n\t\t\t|                      6. INFIX_TO_POSTFIX() (using stack)                |"<<endl;
+			cout<<"\n\t\t\t|                      7. BACK                                            |"<<endl;
+			cout<<"\n\t\t\t|                      0. EXIT                                            |"<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t                   selected option :";
+			cin>>choice;
+			if(choice<0 || choice>7) {
+				cout<<"\n\t\t\t\t  enter positive value or value from option           "<<endl;
+			}
+		} while(choice<0 || choice>7);
+		switch(choice) {
+			case 1: {
+				system("cls");
+				cout<<"\n\t\t\t\t        PUSHING........VALUE ........"<<endl;
+				int val;
+				cout<<"\n\t\t\t\t        ENTER THE VALUE YOU WANT TO PUSH :";
+				cin>>val;
+				lls.push(val);
+				system("cls");
+				cout<<"\n\n\n\t\t\t\t        AFTER PUSHING STACK IS...."<<endl;
+				lls.display();
+				break;
+			}
+			case 2: {
+				system("cls");
+				cout<<"\n\t\t\t\t        POPPING..........."<<endl;
+				cout<<"\n\t\t\t\t        POPPED ELEMENT IS :"<<lls.pop();
+				cout<<"\n\n\n\t\t\t\t        AFTER POPING VALUE STACK IS......"<<endl;
+				lls.display();
+				break;
+			}
+			case 3: {
+				system("cls");
+				cout<<"\n\t\t\t\t        TELLING PEEK......."<<endl;
+				cout<<"\n\t\t\t\t        VALUE AT THE PEEK IS :"<<lls.peek();
+				cout<<"\n\t\t\t\t        STACK IS....."<<endl;
+				lls.display();
+				break;
+			}
+			case 4: {
+				system("cls");
+				cout<<"\n\t\t\t\t        TELLING STACK IS EMPTY OR NOT........"<<endl;
+				if(!lls.isEmpty()) {
+					cout<<"\n\t\t\t\t          STACK IS NOT EMPTY "<<endl;
+				}
+				cout<<"\n\t\t\t\t        STACK IS EMPTY"<<endl;
+			}
+			case 5: {
+
+				break;
+			}
+			case 6: {
+
+				break;
+			}
+			case 7: {
+				stackmenu();
+				break;
+			}
+		}
+	} while(choice != 0);
+}
+
+
+//---------------------------------------Queue with array---------------------------------------------------
+
+void queuewitharray() {
+	system("cls");
+	int a;
+	cout<<"\n\t\t\t\t Enter the size of array :";
+	cin>>a;
+	int choice;
+	Myqueue Qwa(a);
+	do {
+		do {
+			cout<<"\n\t\t\t************************QUEUE WITH CIRCULAR ARRAY************************  "<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t|                      1. ENQUEUE()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      2. DEQUEUE()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      3. GETFRONT()                                      |"<<endl;
+			cout<<"\n\t\t\t|                      4. GETREAR()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      5. ISFULL()                                        |"<<endl;
+			cout<<"\n\t\t\t|                      6. SIZE()                                          |"<<endl;
+			cout<<"\n\t\t\t|                      7. ISEMPTY()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      8. REVERSEQUEUE() (using stack)                    |"<<endl;
+			cout<<"\n\t\t\t|                      9. BACK                                            |"<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t                   selected option :";
+			cin>>choice;
+			if(choice<=0 || choice>9) {
+				cout<<"\n\t\t\t\t  enter positive value or value from option           "<<endl;
+			}
+		} while(choice<=0 || choice>9);
+		switch(choice) {
+			case 1: {
+				system("cls");
+				cout<<"\n\t\t\t\t        Enquing........VALUE ........"<<endl;
+				int val;
+				cout<<"\n\t\t\t\t        ENTER THE VALUE YOU WANT TO enqueue :";
+				cin>>val;
+				system("cls");
+				Qwa.enqueue(val);
+				cout<<"\n\t\t\t\t        AFTER ENQUING QUEUE IS...."<<endl;
+				Qwa.display();
+				break;
+			}
+			case 2: {
+				system("cls");
+				cout<<"\n\t\t\t\t        DEQUING VALUE......."<<endl;
+				Qwa.dequeue();
+				cout<<"\n\t\t\t\t        AFTER DEQUING QUEUE IS :"<<endl;
+				Qwa.display();
+				break;
+			}
+			case 3: {
+				system("cls");
+				cout<<"\n\t\t\t\t GETTING FRONT..."<<endl;
+				Qwa.getFront();
+				cout<<"\n";
+				Qwa.display();
+				break;
+			}
+			case 4: {
+				system("cls");;
+				cout<<"\n\t\t\t\t GETTING REAR ..."<<endl;
+				Qwa.getRear();;
+				cout<<"\n";
+				Qwa.display();
+				break;
+			}
+			case 5: {
+				system("cls");
+				bool k;
+				k = Qwa.isFull();
+				if(k) {
+					cout<<"\n\t\t\t\t ARRAY IS FULL..."<<endl;
+				} else {
+					cout<<"\n\t\t\t\t ARRAY IS NOT FULL..."<<endl;
+				}
+				break;
+			}
+			case 6: {
+				system("cls");
+				cout<<"\n\t\t\t\t size of array is :"<<Qwa.getsize();
+				break;
+			}
+			case 7: {
+				system("cls");
+				bool k;
+				k = Qwa.isEmpty();
+				if(k) {
+					cout<<"\n\t\t\t\t queue is empty";
+				} else {
+					cout<<"\n\t\t\t\t que is not empty";
+				}
+				break;
+			}
+			case 8: {
+
+				break;
+			}
+			case 9: {
+				Queuemenu();
+				break;
+			}
+
+		}
+	} while(choice!=0);
+}
+
+//-------------------------------------------queue with singly linked list------------------------------------------
+
+void linkedlistqueue() {
+	system("cls");
+	int choice;
+	linkedqueue lq;
+	do {
+		do {
+			cout<<"\n\t\t\t*********************QUEUE WITH SINGLY LINKED LIST************************ "<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t|                      1. ENQUEUE()  (circular)                           |"<<endl;
+			cout<<"\n\t\t\t|                      2. DEQUEUE()  (circular)                           |"<<endl;
+			cout<<"\n\t\t\t|                      3. GETFRONT()                                      |"<<endl;
+			cout<<"\n\t\t\t|                      4. GETREAR()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      5. ISFULL()                                        |"<<endl;
+			cout<<"\n\t\t\t|                      6. SIZE()                                          |"<<endl;
+			cout<<"\n\t\t\t|                      7. ISEMPTY()                                       |"<<endl;
+			cout<<"\n\t\t\t|                      8. REVERSEQUEUE() (using stack)                    |"<<endl;
+			cout<<"\n\t\t\t|                      9. BACK                                            |"<<endl;
+			cout<<"\n\t\t\t---------------------------------------------------------------------------"<<endl;
+			cout<<"\n\t\t\t                   selected option :";
+			cin>>choice;
+			if(choice<=0 || choice>9) {
+				cout<<"\n\t\t\t\t  enter positive value or value from option           "<<endl;
+			}
+		} while(choice<=0 || choice>9);
+		switch(choice) {
+			case 1: {
+				system("cls");
+				cout<<"\n\t\t\t\t        Enquing........VALUE ........"<<endl;
+				int val;
+				cout<<"\n\t\t\t\t        ENTER THE VALUE YOU WANT TO enqueue :";
+				cin>>val;
+				system("cls");
+				lq.enqueue(val);
+				cout<<"\n\t\t\t\t        AFTER ENQUING QUEUE IS...."<<endl;
+				lq.display();
+				break;
+				break;
+			}
+			case 2: {
+				system("cls");
+				cout<<"\n\t\t\t\t        DEQUING VALUE......."<<endl;
+				lq.dequeue();
+				cout<<"\n\t\t\t\t        AFTER DEQUING QUEUE IS :"<<endl;
+				lq.display();
+				break;
+			}
+			case 3: {
+				system("cls");
+				cout<<"\n\t\t\t\t GETTING FRONT..."<<endl;
+				int k;
+				k= lq.getfront();
+				cout<<"\n";
+				if(k==-1) {
+					cout<<"\n\t\t\t\t EMPTY QUEUE"<<endl;
+				} else {
+					cout<<"\n\t\t\t\t FRONT IS :";
+					cout<<k;
+				}
+				lq.display();
+				break;
+			}
+			case 4: {
+				system("cls");;
+				cout<<"\n\t\t\t\t GETTING REAR ..."<<endl;
+				int k;
+				k = lq.getrear();
+				cout<<"\n";
+				if(k==-1) {
+					cout<<"\n\t\t\t\t EMPTY QUEUE"<<endl;
+				} else {
+					cout<<"\n\t\t\t\t REAR IS :";
+					cout<<k;
+				}
+				lq.display();
+				break;
+			}
+			case 5: {
+				system("cls");
+				cout<<"\n\t\t\t\t IT IS NOT POSSIBLE TO FULL THE QUEUE IN LINKEDLIST..."<<endl;
+				break;
+			}
+			case 6: {
+				system("cls");
+				cout<<"\n\t\t\t\t size of queue is :"<<lq.size();
+				break;
+			}
+			case 7: {
+				system("cls");
+				bool k;
+				k = lq.isEmpty();
+				if(k) {
+					cout<<"\n\t\t\t\t\t    QUEUE IS EMPTY\n\n";
+				} else {
+					cout<<"\n\t\t\t\t\t    QUEUE IS NOT EMPTY\n\n";
+				}
+				break;
+			}
+			case 8: {
+
+				break;
+			}
+			case 9: {
+				Queuemenu();
+				break;
+			}
+
+		}
+	} while(choice!=0);
+}
+
+//-------------------------------------main-------------------------------------------
+
+int main() {
+	menu();
+}
